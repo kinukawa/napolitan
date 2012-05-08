@@ -12,5 +12,8 @@ exports.getUploadPage = function(req, res){
 };
 
 exports.postUploadData = function(req, res){
+    req.form.complete(function(err, fields, files) {
+        console.log('here i go');
+    });
     res.redirect('/upload');
 };
