@@ -1,3 +1,12 @@
+var mongo = require("mongodb");
+var client = new mongo.Db('test',new mongo.Server('127.0.0.1',27017));
+client.open(function (err,client){
+    if(err){
+        console.log(err);
+    }else{
+        console.log("connected to mongodb");
+    }
+});
 
 /*
 * GET home page.
