@@ -22,6 +22,20 @@ exports.getUploadPage = function(req, res){
     res.render('upload', { title: 'Upload Page' })
 };
 
+
+function saveData(data){
+    client.collection("webdbtest",function(err,collection){
+        if(err){
+            throw err;
+        }
+        collection.save(data,function(err){
+            if(err){
+                throw err;
+            }
+        });
+    });
+}
+
 exports.postUploadData = function(req, res){
     console.log(req.body);
     console.log(req.files);
@@ -29,5 +43,6 @@ exports.postUploadData = function(req, res){
         if (err) throw err;
             console.log('It\'s saved!');
     });
+    saveData({path:req.files.image.path});
     res.redirect('/upload');
 };
