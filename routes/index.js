@@ -1,5 +1,7 @@
+var admZip = require("adm-zip");
 var mongo = require("mongodb");
 var client = new mongo.Db('test',new mongo.Server('127.0.0.1',27017));
+
 client.open(function (err,client){
     if(err){
         console.log(err);
@@ -39,10 +41,21 @@ function saveData(data){
 exports.postUploadData = function(req, res){
     console.log(req.body);
     console.log(req.files);
-    fs.writeFile('message.jpg', req.body.file, function (err) {
-        if (err) throw err;
-            console.log('It\'s saved!');
+
+    var tmp_path = req.files.archive.path;
+    var target_path = './public/archives/' + req.body.version + ".ipa";
+
+    fs.rename(tmp_path, target_path, function(err) {
+        if (err) {
+            throw err;
+        }
+        fs.unlink(tmp_path, function() {
+            if (err) {
+                throw err;
+            }
+            res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
+        });
     });
-    saveData({path:req.files.image.path});
+    //saveData({path:req.files.image.path});
     res.redirect('/upload');
 };

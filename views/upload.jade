@@ -2,6 +2,7 @@ h1= title
 p Welcome to #{title}
 h2 Add new data
 form(action='/upload', method='post', enctype="multipart/form-data", action="/upload")
-  input(type='file',name='image')
-  input(type='submit',value='追加')
+  input(type='file',name='archive') 
+  input(type='text',name='version',value='11.1')
+  input(type='submit',value='送信')
 
