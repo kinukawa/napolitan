@@ -26,7 +26,7 @@ exports.getUploadPage = function(req, res){
 
 
 function saveData(data){
-    client.collection("webdbtest",function(err,collection){
+    client.collection("naporitan",function(err,collection){
         if(err){
             throw err;
         }
@@ -44,7 +44,7 @@ exports.postUploadData = function(req, res){
 
     var tmp_path = req.files.archive.path;
     var target_path = './public/archives/' + req.body.version + ".ipa";
-
+    var full_path = "http://localhost:3000/archives/" + req.body.version + ".ipa";
     fs.rename(tmp_path, target_path, function(err) {
         if (err) {
             throw err;
@@ -56,6 +56,10 @@ exports.postUploadData = function(req, res){
             res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
         });
     });
-    //saveData({path:req.files.image.path});
+    saveData({
+        version:req.body.version,
+        path:target_path,
+        full_path:full_path
+    });
     res.redirect('/upload');
 };
