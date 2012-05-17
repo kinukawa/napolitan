@@ -1,4 +1,3 @@
-var admZip = require("adm-zip");
 var mongo = require("mongodb");
 var client = new mongo.Db('test',new mongo.Server('127.0.0.1',27017));
 
@@ -30,11 +29,30 @@ function saveData(data){
         if(err){
             throw err;
         }
-        collection.save(data,function(err){
-            if(err){
-                throw err;
+
+        collection.findOne({version:data.version}, {}, function(err, doc) {
+            if (err) sys.puts(err.message);
+            console.log(doc);
+            if(doc){
+                doc.path = data.path;
+                doc.full_path = data.full_path;
+                doc.created = data.created;
+                collection.save(doc,function(err){
+                    if(err){
+                        throw err;
+                    }
+                });
+
+            }else{
+                collection.save(data,function(err){
+                    if(err){
+                        throw err;
+                    }
+                });
+
             }
         });
+
     });
 }
 
@@ -45,7 +63,7 @@ exports.postUploadData = function(req, res){
     var tmp_path = req.files.archive.path;
     var target_path = './public/archives/' + req.body.version + ".ipa";
     var full_path = "http://localhost:3000/archives/" + req.body.version + ".ipa";
-    fs.rename(tmp_path, target_path, function(err) {
+        fs.rename(tmp_path, target_path, function(err) {
         if (err) {
             throw err;
         }
@@ -53,10 +71,11 @@ exports.postUploadData = function(req, res){
             if (err) {
                 throw err;
             }
-            res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
         });
     });
+    var now = new Date();
     saveData({
+        created:now,
         version:req.body.version,
         path:target_path,
         full_path:full_path
