@@ -5,7 +5,7 @@ div(id="home",data-role="page")
     li(data-role='list-divider')= 'iPhone'
     each item in list
       li= item.version
-        a(href="hoge") 
+        a(href="itms-services://?action=download-manifest&url=http://192.168.11.11:3000/archives/11.1.plist")
   form(action='/upload', method='post', enctype="multipart/form-data", action="/upload")
     input(type='file',name='archive') 
     input(type='text',name='version',value='11.1')

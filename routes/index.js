@@ -63,7 +63,7 @@ function outputPlist(version){
   .on('close', function ()         { console.log('write: colse'); })
   .on('pipe',  function (src)      { console.log('write: pipe');  });
 
-  var plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict>	<key>items</key>	<array>		<dict>			<key>assets</key>			<array>				<dict>					<key>kind</key>					<string>software-package</string>					<key>url</key>					<string>http://localhost:3000/</string>				</dict>			</array>			<key>metadata</key>			<dict>				<key>bundle-identifier</key>				<string>com.momodev.testflight</string>				<key>bundle-version</key>				<string>1.0</string>				<key>kind</key>				<string>software</string>				<key>title</key>				<string>testflight</string>			</dict>		</dict>	</array></dict></plist>";
+  var plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict>	<key>items</key>	<array>		<dict>			<key>assets</key>			<array>				<dict>					<key>kind</key>					<string>software-package</string>					<key>url</key>					<string>http://192.168.11.11:3000/archives/11.1.ipa</string>				</dict>			</array>			<key>metadata</key>			<dict>				<key>bundle-identifier</key>				<string>com.momodev.testflight</string>				<key>bundle-version</key>				<string>1.0</string>				<key>kind</key>				<string>software</string>				<key>title</key>				<string>11.1</string>			</dict>		</dict>	</array></dict></plist>";
   write_stream.write(plist);
   write_stream.end();
 }
@@ -99,7 +99,8 @@ exports.postUploadData = function(req, res){
 exports.showIPAData = function(req, res){
   var ua = req.headers['user-agent'];
   var isIphone;
-  if(ua.indexOf("iPhone",0) != -1){
+  if((ua.indexOf("iPhone",0) != -1) ||
+    (ua.indexOf("iPad",0) != -1)){
     isIphone = true;
   }else{
     isIphone = false;
