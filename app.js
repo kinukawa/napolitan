@@ -29,7 +29,8 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.index);
+app.get('/', routes.showList);
+app.get('/list', routes.showList);
 app.get('/upload', routes.showIPAData);
 app.post('/upload', routes.postUploadData);
 

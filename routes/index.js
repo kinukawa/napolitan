@@ -147,3 +147,45 @@ exports.showIPAData = function(req, res){
     });
   });
 }
+
+exports.showList = function(req, res){
+  var ua = req.headers['user-agent'];
+  var archiveURL = conf.serverURL + conf.archivePath;
+
+  var isIphone;
+  if((ua.indexOf("iPhone",0) != -1) ||
+    (ua.indexOf("iPad",0) != -1)){
+    isIphone = true;
+  }else{
+    isIphone = false;
+  }
+  client.collection(collectionName,function(err,collection){
+    if(err){
+      throw err;
+    }
+    collection.find().toArray(function(err, results){
+      if(err){
+        throw err;
+      }
+
+      for(var i=0; i<results.length; i++){
+        var c = results[i].created;
+        results[i].dateTime = c.getFullYear() + "/" + 
+                              (c.getMonth() + 1) + "/" + 
+                              c.getDate() + "  " + 
+                              c.getHours() + ":" + 
+                              c.getMinutes() + ":" + 
+                              c.getSeconds() ;
+        var l = results[i].created.toLocaleString();
+        console.log(l);
+      }
+
+      res.render('list',{
+        title: 'ipa list',
+        list: results,
+        isIphone: isIphone,
+        archiveURL: archiveURL
+      });
+    });
+  });
+}
