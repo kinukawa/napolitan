@@ -55,8 +55,21 @@ function saveData(data){
     });
 }
 
+function outputPlist(version){
+  var write_stream = fs.createWriteStream('./public/archives/'+version+'.plist');
+
+  write_stream.on('drain', function ()         { console.log('write: drain'); })
+  .on('error', function (exeption) { console.log('write: error'); })
+  .on('close', function ()         { console.log('write: colse'); })
+  .on('pipe',  function (src)      { console.log('write: pipe');  });
+
+  var plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict>	<key>items</key>	<array>		<dict>			<key>assets</key>			<array>				<dict>					<key>kind</key>					<string>software-package</string>					<key>url</key>					<string>http://localhost:3000/</string>				</dict>			</array>			<key>metadata</key>			<dict>				<key>bundle-identifier</key>				<string>com.momodev.testflight</string>				<key>bundle-version</key>				<string>1.0</string>				<key>kind</key>				<string>software</string>				<key>title</key>				<string>testflight</string>			</dict>		</dict>	</array></dict></plist>";
+  write_stream.write(plist);
+  write_stream.end();
+}
+
 exports.postUploadData = function(req, res){
-    console.log(req.body);
+  console.log(req.body);
     console.log(req.files);
 
     var tmp_path = req.files.archive.path;
@@ -79,22 +92,31 @@ exports.postUploadData = function(req, res){
         path:target_path,
         full_path:full_path
     });
+    outputPlist(req.body.version);
     res.redirect('/upload');
 };
 
 exports.showIPAData = function(req, res){
-    client.collection(collectionName,function(err,collection){
-        if(err){
-            throw err;
-        }
-        collection.find().toArray(function(err, results){
-            if(err){
-                throw err;
-            }
-            res.render('upload',{
-                title: 'Upload Page',
-                list: results
-            });
-        });
+  var ua = req.headers['user-agent'];
+  var isIphone;
+  if(ua.indexOf("iPhone",0) != -1){
+    isIphone = true;
+  }else{
+    isIphone = false;
+  }
+  client.collection(collectionName,function(err,collection){
+    if(err){
+      throw err;
+    }
+    collection.find().toArray(function(err, results){
+      if(err){
+        throw err;
+      }
+      res.render('upload',{
+        title: 'Upload Page',
+        list: results,
+        isIphone: isIphone
+      });
     });
+  });
 }
