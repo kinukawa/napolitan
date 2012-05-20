@@ -4,11 +4,13 @@ html
     title= title
     meta(charset="UTF-8")
     meta(name='viewport',content='width=device-width, initial-scale=1')
-    //link(rel='stylesheet', href='/stylesheets/style.css')
-    //jQuery Mobile
     if isIphone
+      //jQuery Mobile
       link(href='http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css', rel='stylesheet', type='text/css')
       script(src='http://code.jquery.com/jquery-1.6.4.min.js')
       script(src='http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js')
+    else
+      link(rel='stylesheet', href='/stylesheets/style.css')
+
     
   body!= body

@@ -108,6 +108,8 @@ exports.postUploadData = function(req, res){
 
 exports.showIPAData = function(req, res){
   var ua = req.headers['user-agent'];
+  var archiveURL = conf.serverURL + conf.archivePath;
+
   var isIphone;
   if((ua.indexOf("iPhone",0) != -1) ||
     (ua.indexOf("iPad",0) != -1)){
@@ -123,10 +125,24 @@ exports.showIPAData = function(req, res){
       if(err){
         throw err;
       }
+
+      for(var i=0; i<results.length; i++){
+        var c = results[i].created;
+        results[i].dateTime = c.getFullYear() + "/" + 
+                              (c.getMonth() + 1) + "/" + 
+                              c.getDate() + "  " + 
+                              c.getHours() + ":" + 
+                              c.getMinutes() + ":" + 
+                              c.getSeconds() ;
+        var l = results[i].created.toLocaleString();
+        console.log(l);
+      }
+
       res.render('upload',{
         title: 'Upload Page',
         list: results,
-        isIphone: isIphone
+        isIphone: isIphone,
+        archiveURL: archiveURL
       });
     });
   });

@@ -4,8 +4,11 @@ div(id="home",data-role="page")
   ul(data-role='listview')
     li(data-role='list-divider')= 'iPhone'
     each item in list
-      li= item.version
-        a(href="itms-services://?action=download-manifest&url=http://192.168.11.11:3000/archives/" + item.version + ".plist")
+      li
+        a(href="itms-services://?action=download-manifest&url=" + archiveURL + item.version + ".plist")
+          h3= item.version
+          p(class="ui-li-aside")
+            h4= item.dateTime
   if !isIphone
     form(action='/upload', method='post', enctype="multipart/form-data", action="/upload")
       input(type='file',name='archive') 
