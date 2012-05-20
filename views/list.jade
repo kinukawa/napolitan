@@ -1,0 +1,12 @@
+div(id="home",data-role="page")
+  div(data-role="header")
+    h1= title
+  ul(data-role='listview')
+    li(data-role='list-divider')= 'iPhone'
+    each item in list
+      li
+        a(href="itms-services://?action=download-manifest&url=" + archiveURL + item.version + ".plist")
+          h3= item.version
+          p(class="ui-li-aside")
+            h4= item.dateTime
+ 
