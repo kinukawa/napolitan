@@ -1,13 +1,12 @@
-h1= title
-p Welcome to #{title}
-h2 Add new data
-form(action='/upload', method='post', enctype="multipart/form-data", action="/upload")
-  input(type='file',name='archive') 
-  input(type='text',name='version',value='11.1')
-  input(type='submit',value='送信')
-
-h2 List
-ul
-  each item in list
-    li=item.version
-
+div(id="home",data-role="page",data-theme="c")
+  div(data-role="header")
+    h1= title
+  ul(data-role='listview')
+    li(data-role='list-divider')='iPhone'
+    each item in list
+      li=item.version
+  form(action='/upload', method='post', enctype="multipart/form-data", action="/upload")
+    input(type='file',name='archive') 
+    input(type='text',name='version',value='11.1')
+    input(type='submit',value='送信')
+ 
