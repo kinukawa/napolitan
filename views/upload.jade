@@ -1,10 +1,11 @@
-div(id="home",data-role="page",data-theme="c")
+div(id="home",data-role="page")
   div(data-role="header")
     h1= title
   ul(data-role='listview')
-    li(data-role='list-divider')='iPhone'
+    li(data-role='list-divider')= 'iPhone'
     each item in list
-      li=item.version
+      li= item.version
+        a(href="hoge") 
   form(action='/upload', method='post', enctype="multipart/form-data", action="/upload")
     input(type='file',name='archive') 
     input(type='text',name='version',value='11.1')
