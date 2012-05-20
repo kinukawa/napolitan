@@ -1,4 +1,5 @@
 var mongo = require("mongodb");
+var conf = require("../config");
 var client = new mongo.Db('naporitan',new mongo.Server('127.0.0.1',27017));
 var collectionName = "naporitan";
 
@@ -56,14 +57,23 @@ function saveData(data){
 }
 
 function outputPlist(version){
-  var write_stream = fs.createWriteStream('./public/archives/'+version+'.plist');
+  var write_stream = fs.createWriteStream('./public/' + 
+                                          conf.archivePath + 
+                                          version + 
+                                          '.plist');
 
-  write_stream.on('drain', function ()         { console.log('write: drain'); })
+  write_stream.on('drain', function () { console.log('write: drain'); })
   .on('error', function (exeption) { console.log('write: error'); })
   .on('close', function ()         { console.log('write: colse'); })
   .on('pipe',  function (src)      { console.log('write: pipe');  });
 
-  var plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict>	<key>items</key>	<array>		<dict>			<key>assets</key>			<array>				<dict>					<key>kind</key>					<string>software-package</string>					<key>url</key>					<string>http://192.168.11.11:3000/archives/11.1.ipa</string>				</dict>			</array>			<key>metadata</key>			<dict>				<key>bundle-identifier</key>				<string>com.momodev.testflight</string>				<key>bundle-version</key>				<string>1.0</string>				<key>kind</key>				<string>software</string>				<key>title</key>				<string>11.1</string>			</dict>		</dict>	</array></dict></plist>";
+  var plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict>	<key>items</key>	<array>		<dict>			<key>assets</key>			<array>				<dict>					<key>kind</key>					<string>software-package</string>					<key>url</key>					<string>" + 
+    conf.serverURL + conf.archivePath + version + ".ipa</string>" + 
+      "				</dict>			</array>			<key>metadata</key>			<dict>				<key>bundle-identifier</key>				<string>" + 
+        conf.bundleID + 
+          "</string>				<key>bundle-version</key>				<string>1.0</string>				<key>kind</key>				<string>software</string>				<key>title</key>				<string>" + 
+    version + 
+    "</string>			</dict>		</dict>	</array></dict></plist>";
   write_stream.write(plist);
   write_stream.end();
 }
@@ -73,8 +83,8 @@ exports.postUploadData = function(req, res){
     console.log(req.files);
 
     var tmp_path = req.files.archive.path;
-    var target_path = './public/archives/' + req.body.version + ".ipa";
-    var full_path = "http://localhost:3000/archives/" + req.body.version + ".ipa";
+    var target_path = './public/' + conf.archivePath + req.body.version + ".ipa";
+    var full_path = conf.serverURL + conf.archivePath + req.body.version + ".ipa";
         fs.rename(tmp_path, target_path, function(err) {
         if (err) {
             throw err;
