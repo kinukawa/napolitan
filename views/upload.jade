@@ -6,3 +6,8 @@ form(action='/upload', method='post', enctype="multipart/form-data", action="/up
   input(type='text',name='version',value='11.1')
   input(type='submit',value='送信')
 
+h2 List
+ul
+  each item in list
+    li=item.version
+

@@ -30,7 +30,7 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
-app.get('/upload', routes.getUploadPage);
+app.get('/upload', routes.showIPAData);
 app.post('/upload', routes.postUploadData);
 
 app.listen(3000);

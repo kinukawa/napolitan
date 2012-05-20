@@ -1,5 +1,6 @@
 var mongo = require("mongodb");
 var client = new mongo.Db('naporitan',new mongo.Server('127.0.0.1',27017));
+var collectionName = "naporitan";
 
 client.open(function (err,client){
     if(err){
@@ -25,7 +26,7 @@ exports.getUploadPage = function(req, res){
 
 
 function saveData(data){
-    client.collection("naporitan",function(err,collection){
+    client.collection(collectionName,function(err,collection){
         if(err){
             throw err;
         }
@@ -82,4 +83,18 @@ exports.postUploadData = function(req, res){
 };
 
 exports.showIPAData = function(req, res){
+    client.collection(collectionName,function(err,collection){
+        if(err){
+            throw err;
+        }
+        collection.find().toArray(function(err, results){
+            if(err){
+                throw err;
+            }
+            res.render('upload',{
+                title: 'Upload Page',
+                list: results
+            });
+        });
+    });
 }
